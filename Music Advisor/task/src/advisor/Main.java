@@ -10,10 +10,21 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        OURERLOOP:
         while (true) {
-            String input = scanner.nextLine();
-            String[] inputArray = input.split(" ");
+            String[] inputArray = getInput(scanner);
+            if (!inputArray[0].toLowerCase().equals("auth") && !inputArray[0].toLowerCase().equals("exit")) {
+                System.out.println("Please, provide access for application.");
+            } else if (inputArray[0].toLowerCase().equals("exit")) {
+                System.out.println("---GOODBYE!---");
+                System.exit(0);
+            } else {
+                showAuth();
+                break;
+            }
+        }
+        OUTERLOOP:
+        while (true) {
+            String[] inputArray = getInput(scanner);
             switch (inputArray[0]) {
                 case "new":
                     showRelease();
@@ -27,15 +38,24 @@ public class Main {
                 case "playlists":
                     showPlayList();
                     break;
+                case "auth":
+                    showAuth();
+                    break;
                 case "exit":
                     System.out.println("---GOODBYE!---");
-                    break OURERLOOP;
+                    break OUTERLOOP;
                 default:
                     System.exit(1);
             }
         }
-
     }
+
+    private static String[] getInput(Scanner scanner) {
+        String input = scanner.nextLine();
+        String[] inputArray = input.split(" ");
+        return inputArray;
+    }
+
 
     private static void showRelease() {
         System.out.println("---NEW RELEASES---");
@@ -63,6 +83,11 @@ public class Main {
         PlayList.getPlayList().forEach(p -> {
             System.out.println(p);
         });
+    }
+
+    private static void showAuth() {
+        System.out.println("https://accounts.spotify.com/authorize?client_id=22f7d0d3fdba48e593486f7f0779cab3&redirect_uri=http://localhost:8080&response_type=code");
+        System.out.println("---SUCCESS---");
     }
 
 
