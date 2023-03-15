@@ -14,6 +14,7 @@ public class Main {
         if (args.length > 1 && Objects.equals(args[0], "-access")) {
             AuthorizationEngine.REQUEST_URI = args[1];
         }
-
+        Advisor advisor = new Advisor();
+        advisor.start();
     }
 }

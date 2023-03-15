@@ -6,7 +6,7 @@ public class PlayListService extends ToppingWrapper {
             + "Walk Like A Badass\n"
             + "Rage Beats\n"
             + "Arab Mood Booster\n"
-            + "Sunday Stroll\n";
+            + "Sunday Stroll";
 
     public PlayListService(Service service) {
         super(service);

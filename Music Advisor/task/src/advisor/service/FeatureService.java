@@ -6,7 +6,7 @@ public class FeatureService extends ToppingWrapper {
             + "Mellow Morning\n"
             + "Wake Up and Smell the Coffee\n"
             + "Monday Motivation\n"
-            + "Songs to Sing in the Shower\n";
+            + "Songs to Sing in the Shower";
 
     public FeatureService(Service service) {
         super(service);
