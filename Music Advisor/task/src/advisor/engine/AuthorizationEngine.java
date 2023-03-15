@@ -52,9 +52,9 @@ public class AuthorizationEngine {
                     String query = exchange.getRequestURI().getQuery();
                     if (query != null && query.contains("code")) {
                         accessCode = query.substring(5);
-                        response = "Got the code, returning back to the program.";
+                        response = "Got the code. Return back to your program.";
                     } else {
-                        response = "Error when getting the access code.";
+                        response = "Authorization code not found. Try again.";
                     }
                     exchange.sendResponseHeaders(200, response.length());
                     exchange.getResponseBody().write(response.getBytes());
