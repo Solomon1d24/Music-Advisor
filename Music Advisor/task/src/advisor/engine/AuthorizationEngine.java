@@ -1,8 +1,8 @@
 package advisor.engine;
 
 import advisor.Main;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import advisor.helper.JsonHelper;
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -91,14 +91,20 @@ public class AuthorizationEngine {
                 .build();
 
         try {
-            System.out.println("making http request for access_token...");
+            System.out.println("Making http request for access_token...");
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            System.out.println("response:");
-            System.out.println(httpResponse.body());
-            System.out.println("---SUCCESS---");
-            Main.AUTH = true;
+            JsonElement tokenElement = JsonHelper.getField(httpResponse.body(), "access_token");
+            if (tokenElement != null && tokenElement.isJsonPrimitive()) {
+                accessToken = tokenElement.getAsString();
+                System.out.println("Success!");
+                Main.AUTH = true;
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 }
