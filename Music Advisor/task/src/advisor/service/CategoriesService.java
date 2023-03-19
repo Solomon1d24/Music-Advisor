@@ -24,6 +24,11 @@ public class CategoriesService extends ToppingWrapper {
         super(service);
     }
 
+    /**
+     * Thie method is used to initialize the categoryMap using the accessToken got from the authorization engine
+     * @param accessToken
+     * @see advisor.engine.AuthorizationEngine
+     * */
     public void setCategoryList(String accessToken) {
         HttpClient httpClient = HttpClient.newBuilder().build();
 
@@ -62,6 +67,11 @@ public class CategoriesService extends ToppingWrapper {
         return categoryMap.values().stream().toList();
     }
 
+    /**
+     * The instance method inherited from the service interface
+     * @return String of the response value
+     * @see Service
+     * */
     @Override
     public String getService() {
         return super.getService()

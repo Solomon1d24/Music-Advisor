@@ -17,12 +17,17 @@ import java.util.stream.Collectors;
 
 public class NewService extends ToppingWrapper {
 
-    List<Album> albumList;
+    private List<Album> albumList;
 
     public NewService(Service service) {
         super(service);
     }
 
+    /**
+     * The instance method inherited from the service interface
+     * @return String of the response value
+     * @see Service
+     * */
     @Override
     public String getService() {
         return super.getService()
@@ -31,6 +36,15 @@ public class NewService extends ToppingWrapper {
                         .collect(Collectors.joining("\n"));
     }
 
+    public List<Album> getAlbumList() {
+        return albumList;
+    }
+
+    /**
+     * This method is to initialize the alnumList using the accesstoken got from authorization engine class
+     * @param token
+     * @see advisor.engine.AuthorizationEngine
+     * */
     public void setAlbumList(String token) {
         HttpClient httpClient = HttpClient.newBuilder().build();
 
