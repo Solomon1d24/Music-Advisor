@@ -30,6 +30,9 @@ public class PlayListService extends ToppingWrapper implements UsePlayList {
      * */
     @Override
     public String getService() {
+        if(playListList == null || playListList.isEmpty()){
+            return null;
+        }
         return super.getService()
                 + playListList.stream()
                         .map(s -> s.getName() + "\n" + s.getLink() + "\n")

@@ -16,4 +16,13 @@ public class JsonHelper {
         JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
         return jsonObject.get(field);
     }
+
+
+    public static boolean checkFieldExist(String json, String field){
+        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+        return jsonObject.keySet().contains(field);
+    }
+
+
+
 }

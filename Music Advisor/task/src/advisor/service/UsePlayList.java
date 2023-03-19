@@ -3,6 +3,7 @@ package advisor.service;
 import advisor.helper.JsonHelper;
 import advisor.model.PlayList;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -25,18 +26,26 @@ public interface UsePlayList {
         playListList.clear();
         try {
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            for (JsonElement itemsElement : JsonHelper.getField(httpResponse.body(), "playlists")
-                    .getAsJsonObject()
-                    .get("items")
-                    .getAsJsonArray()) {
-                String link = itemsElement
+
+            if (!JsonHelper.checkFieldExist(httpResponse.body(), "error")) {
+                for (JsonElement itemsElement : JsonHelper.getField(httpResponse.body(), "playlists")
                         .getAsJsonObject()
-                        .get("external_urls")
-                        .getAsJsonObject()
-                        .get("spotify")
-                        .getAsString();
-                String name = itemsElement.getAsJsonObject().get("name").getAsString();
-                playListList.add(new PlayList(name, link));
+                        .get("items")
+                        .getAsJsonArray()) {
+                    String link = itemsElement
+                            .getAsJsonObject()
+                            .get("external_urls")
+                            .getAsJsonObject()
+                            .get("spotify")
+                            .getAsString();
+                    String name = itemsElement.getAsJsonObject().get("name").getAsString();
+                    playListList.add(new PlayList(name, link));
+                }
+            } else {
+                JsonObject errorObject =
+                        JsonHelper.getField(httpResponse.body(), "error").getAsJsonObject();
+                String errorMessage = errorObject.get("message").getAsString();
+                System.out.println(errorMessage);
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

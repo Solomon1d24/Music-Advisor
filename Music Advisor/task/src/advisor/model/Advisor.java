@@ -49,6 +49,20 @@ public class Advisor {
                 ((FeatureService) serviceMap.get("featured")).setPlayList(authorizationEngine.getAccessToken());
                 ((PlayListService) serviceMap.get("playlists"))
                         .setCategoryMap(((CategoriesService) serviceMap.get("categories")).getCategoryMap());
+            } else if (null != command && Main.AUTH && !Objects.equals("exit", command)) {
+                if (!command.contains("playlists")) {
+                    System.out.println(serviceMap.get(command).getService());
+                } else {
+                    String category = command.substring("playlists ".length());
+                    PlayListService service = (PlayListService) serviceMap.get("playlists");
+                    service.setPlayListList(authorizationEngine.getAccessToken(), category);
+                    System.out.println(service.getService() == null ? "" : service.getService());
+                }
+            } else if (null != command && Objects.equals("exit", command)) {
+                System.out.println("---GOODBYE!---");
+                System.exit(0);
+            } else if (!Main.AUTH) {
+                System.out.println("Please, provide access for application.");
             }
         }
     }
