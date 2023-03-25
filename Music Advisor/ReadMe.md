@@ -14,15 +14,15 @@ Just download the Java packages and run it in command line interface would be en
 
 ### Command you can use to do searching
 
-| command                  | usage                                                              |
-|--------------------------|--------------------------------------------------------------------|
-| new                      | To get the latest Music Albums from Spotify                        |
-| featured                 | To get the featured playlists of different categories from Spotify |
-| playlists <`catagories`> | To get the playlists of a specific type of Categories              |
-| categories               | To get the kinds of categories of albums in Spotify system         |
-| next                     | To go to next page of the search result                            |
-| prev                     | To go to the previous page of the search result                    |
-
+| command                  | usage                                                                  |
+|--------------------------|------------------------------------------------------------------------|
+| new                      | To get the latest Music Albums from Spotify                            |
+| featured                 | To get the featured playlists of different categories from Spotify     |
+| playlists <`catagories`> | To get the playlists of a specific type of Categories                  |
+| categories               | To get the kinds of categories of albums in Spotify system             |
+| next                     | To go to next page of the search result                                |
+| prev                     | To go to the previous page of the search result                        |
+| auth                     | To do authorization for API, should be done first before all commmands | 
 
 ### Running environment 
 JDK Version : Jetbrains Runtime Version 17
