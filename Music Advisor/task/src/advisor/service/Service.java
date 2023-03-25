@@ -1,5 +1,9 @@
 package advisor.service;
 
+import java.util.List;
+
 public interface Service {
-    public String getService();
+    public List<String> getResult();
+
+    public void execute(String token);
 }

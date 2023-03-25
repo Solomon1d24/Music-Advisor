@@ -11,25 +11,42 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CategoriesService extends ToppingWrapper {
+
+/**
+ * This class implements the Service interface and contains the Categories of Songs in Spotify with a map,
+ * the name of the Categories are the keys of the map
+ * This class has been applied with Singleton and Factory pattern
+ * @see Category
+ * @see Service
+ * */
+public class CategoriesService implements Service {
 
     private Map<String, Category> categoryMap;
 
-    public CategoriesService(Service service) {
-        super(service);
+    private static CategoriesService categoriesService;
+
+    public static synchronized CategoriesService getInstance() {
+        if (categoriesService == null) {
+            categoriesService = new CategoriesService();
+        }
+        return categoriesService;
     }
+
+    private CategoriesService() {}
 
     /**
      * Thie method is used to initialize the categoryMap using the accessToken got from the authorization engine
      * @param accessToken
      * @see advisor.engine.AuthorizationEngine
      * */
-    public void setCategoryList(String accessToken) {
+    @Override
+    public void execute(String accessToken) {
         HttpClient httpClient = HttpClient.newBuilder().build();
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -67,14 +84,11 @@ public class CategoriesService extends ToppingWrapper {
         return categoryMap.values().stream().toList();
     }
 
-    /**
-     * The instance method inherited from the service interface
-     * @return String of the response value
-     * @see Service
-     * */
     @Override
-    public String getService() {
-        return super.getService()
-                + getCategoryList().stream().map(Category::getName).collect(Collectors.joining("\n"));
+    public List<String> getResult() {
+        return categoryMap.values().stream()
+                .map(c -> c.getName())
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
     }
 }

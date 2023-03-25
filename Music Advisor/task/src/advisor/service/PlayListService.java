@@ -1,6 +1,7 @@
 package advisor.service;
 
 import advisor.Main;
+import advisor.exception.InvalidCategoryException;
 import advisor.model.Category;
 import advisor.model.PlayList;
 
@@ -12,39 +13,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PlayListService extends ToppingWrapper implements UsePlayList {
+/**
+ * This class implements Service and UsePlayList interfaces.
+ * Besides, it contains a list of playlist and a map of Category, the key of the category map are the names of Category
+ * It has been applied with Singleton and Factory Pattern.
+ * @see PlayList
+ * @see Category
+ * @see Service
+ * @see UsePlayList
+ * */
+public class PlayListService implements UsePlayList, Service {
 
     private List<PlayList> playListList;
 
     private Map<String, Category> categoryMap;
 
-    public PlayListService(Service service) {
-        super(service);
-    }
+    private String category;
 
+    private static PlayListService playListService;
 
-    /**
-     * The instance method inherited from the service interface
-     * @return String of the response value
-     * @see Service
-     * */
-    @Override
-    public String getService() {
-        if(playListList == null || playListList.isEmpty()){
-            return null;
+    public static synchronized PlayListService getInstance() {
+        if (playListService == null) {
+            playListService = new PlayListService();
         }
-        return super.getService()
-                + playListList.stream()
-                        .map(s -> s.getName() + "\n" + s.getLink() + "\n")
-                        .collect(Collectors.joining("\n"));
+        return playListService;
     }
+
+    private PlayListService() {}
 
     /**
      * @param token token for using the API service
-     * @param category the category of the albums need to be inserted to the playlist of the instance of this class */
-    public void setPlayListList(String token, String category) {
+     */
+    @Override
+    public void execute(String token) {
         if (!categoryMap.containsKey(category)) {
-            System.out.println("Unknown category name.");
+            playListList.clear();
             return;
         }
         String id = categoryMap.get(category).getId();
@@ -57,11 +60,7 @@ public class PlayListService extends ToppingWrapper implements UsePlayList {
         if (playListList == null) {
             playListList = new ArrayList<>();
         }
-        playlistInitialization(playListList,httpClient,httpRequest);
-    }
-
-    public List<PlayList> getPlayListList() {
-        return playListList;
+        playlistInitialization(playListList, httpClient, httpRequest);
     }
 
     /**
@@ -70,5 +69,19 @@ public class PlayListService extends ToppingWrapper implements UsePlayList {
      * */
     public void setCategoryMap(Map<String, Category> categoryMap) {
         this.categoryMap = categoryMap;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @Override
+    public List<String> getResult() {
+        if (playListList.isEmpty()) {
+            throw new InvalidCategoryException("Unknown category name.");
+        }
+        return playListList.stream()
+                .map(p -> p.getName() + "\n" + p.getLink() + "\n")
+                .collect(Collectors.toList());
     }
 }

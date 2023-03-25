@@ -9,39 +9,36 @@ import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-public class FeatureService extends ToppingWrapper implements UsePlayList {
+/**
+ * This class implements the Service and UsePlayList interface and contains the playList of Songs in Spotify with a list.
+ * This class has been applied with Singleton and Factory pattern
+ * @see PlayList
+ * @see Service
+ * @see UsePlayList
+ * */
+public class FeatureService implements UsePlayList, Service {
 
     private List<PlayList> playListList;
 
-    public FeatureService(Service service) {
-        super(service);
+    private static FeatureService featureService;
+
+    public static synchronized FeatureService getInstance() {
+        if (featureService == null) {
+            featureService = new FeatureService();
+        }
+        return featureService;
     }
+
+    private FeatureService() {}
 
     /**
-     * The instance method inherited from the service interface
-     * @return String of the response value
-     * @see Service
-     * */
-    @Override
-    public String getService() {
-        return super.getService()
-                + playListList.stream()
-                        .map(s -> s.getName() + "\n" + s.getLink() + "\n")
-                        .collect(Collectors.joining("\n"));
-    }
-
-    public List<PlayList> getPlayListList() {
-        return playListList;
-    }
-
-    /**
-     * This method is to initializate the playlist containing in the instance of FeatureService instance using the token
+     * This method is to initialize the playlist containing in the instance of FeatureService instance using the token
      * got from AuthorizationEngine instance
      * @param token
      * @see advisor.engine.AuthorizationEngine
      * */
-    public void setPlayList(String token) {
+    @Override
+    public void execute(String token) {
         HttpClient httpClient = HttpClient.newBuilder().build();
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -52,6 +49,13 @@ public class FeatureService extends ToppingWrapper implements UsePlayList {
         if (playListList == null) {
             playListList = new ArrayList<>();
         }
-        playlistInitialization(playListList,httpClient,httpRequest);
+        playlistInitialization(playListList, httpClient, httpRequest);
+    }
+
+    @Override
+    public List<String> getResult() {
+        return playListList.stream()
+                .map(p -> p.getName() + "\n" + p.getLink() + "\n")
+                .collect(Collectors.toList());
     }
 }

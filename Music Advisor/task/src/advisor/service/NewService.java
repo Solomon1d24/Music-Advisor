@@ -15,37 +15,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NewService extends ToppingWrapper {
+
+/**
+ * This class implements the Service interface and contains a list of Albums.
+ * This class has been applied with Singleton and Factory Pattern
+ * @see Service
+ * @see Album
+ * */
+public class NewService implements Service {
 
     private List<Album> albumList;
 
-    public NewService(Service service) {
-        super(service);
+    private static NewService newService;
+
+    public static synchronized NewService getInstance() {
+        if (newService == null) {
+            newService = new NewService();
+        }
+        return newService;
     }
 
-    /**
-     * The instance method inherited from the service interface
-     * @return String of the response value
-     * @see Service
-     * */
-    @Override
-    public String getService() {
-        return super.getService()
-                + albumList.stream()
-                        .map(s -> s.getName() + "\n" + s.getArtist() + "\n" + s.getLink() + "\n")
-                        .collect(Collectors.joining("\n"));
-    }
-
-    public List<Album> getAlbumList() {
-        return albumList;
-    }
+    private NewService() {}
 
     /**
      * This method is to initialize the alnumList using the accesstoken got from authorization engine class
      * @param token
      * @see advisor.engine.AuthorizationEngine
      * */
-    public void setAlbumList(String token) {
+    @Override
+    public void execute(String token) {
         HttpClient httpClient = HttpClient.newBuilder().build();
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -78,5 +76,12 @@ public class NewService extends ToppingWrapper {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<String> getResult() {
+        return albumList.stream()
+                .map(a -> a.getName() + "\n" + a.getArtist().toString() + "\n" + a.getLink() + "\n")
+                .collect(Collectors.toList());
     }
 }

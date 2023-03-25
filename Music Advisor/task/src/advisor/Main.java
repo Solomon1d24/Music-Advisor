@@ -1,24 +1,37 @@
 package advisor;
 
+import advisor.controller.ServiceController;
 import advisor.engine.AuthorizationEngine;
-import advisor.model.Advisor;
-import advisor.service.*;
+import advisor.view.ServiceView;
 
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
     public static boolean AUTH = false;
     public static String API_PATH = "https://api.spotify.com";
+    public static int PAGE = 5;
 
     public static void main(String[] args) {
-        if (args.length == 2 && Objects.equals(args[0], "-access")) {
-            AuthorizationEngine.REQUEST_URI = args[1];
-        } else if(args.length > 2 && Objects.equals(args[0],"-access") && Objects.equals(args[2],"-resource")) {
-            AuthorizationEngine.REQUEST_URI = args[1];
-            Main.API_PATH = args[3];
+        if (args.length != 0) {
+            List<String> argsList = Arrays.asList(args);
+            int indexAccess = argsList.indexOf("-access");
+            int indexResource = argsList.indexOf("-resource");
+            int indexPage = argsList.indexOf("-page");
+            if (indexAccess != -1) {
+                AuthorizationEngine.REQUEST_URI = argsList.get(indexAccess + 1);
+            }
+            if (indexResource != 1) {
+                API_PATH = argsList.get(indexResource + 1);
+            }
+            if (indexPage != -1) {
+                PAGE = Integer.parseInt(argsList.get(indexPage + 1));
+            }
         }
-        Advisor advisor = new Advisor();
-        advisor.start();
+
+        ServiceView serviceView = new ServiceView();
+        AuthorizationEngine authorizationEngine = new AuthorizationEngine();
+        new ServiceController(authorizationEngine, serviceView).start();
     }
 }
