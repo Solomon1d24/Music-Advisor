@@ -113,3 +113,11 @@ Workout
 
 ## Documentation of this project 
 https://team-16686495872337.atlassian.net/wiki/spaces/SS/pages/12025857/Music+Advisor
+
+## Flow Diagram of Application
+<img width="856" alt="Flow" src="https://user-images.githubusercontent.com/43601920/227764376-037c7a58-50f7-4a4e-98a4-550989adb36c.png">
+
+## UML Diagram of Application
+
+<img width="995" alt="UML" src="https://user-images.githubusercontent.com/43601920/227764398-72adacd2-dd5a-44ad-972b-3dad4521d893.png">
+
